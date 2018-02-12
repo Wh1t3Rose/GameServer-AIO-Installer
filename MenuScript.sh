@@ -195,9 +195,9 @@ options=(1 "SurfTimer - {$RED}2.02{$NC} - Core of this server." on
          10 "Nominations_Extended - Use with MapChooser_Extended to allow players to nominate maps." off
          11 "sm_skinchooser - Used to allow players to equip models (aka skins for their player model)" off
          12 "Store - Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off
-         13 "csgo_gun_menu - Allows users to pick a gun and a pistol while surfing." off
+         13 "hex_chat - Chat Tags/Colors Plugin. Can give Admins/VIPs special Chat Tags/Colors" off
          14 "thirdperson - Allows players to view their player model in thirdperson." off
-         15 "csgo_gun_menu - Allows users to pick a gun and a pistol while surfing." off
+         15 "chat-procesor - Chat procesing Plugin." on
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 clear
 for choice in $choices
