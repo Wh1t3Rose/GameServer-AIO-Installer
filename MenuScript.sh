@@ -183,21 +183,24 @@ if [[ $opt="Retakes" ]]; then
   echo -e "Retakes Server Install starting";
   
   cmd=(dialog --separate-output --checklist "Select the plugins you want installed:" 22 76 16)
-options=(1 "SurfTimer - {$RED}2.02{$NC} - Core of this server." on
-         2 "AutoFileLoader - Caches all material, model, and sound files for players to download." on # any option can be set to default to "on"
-         3 "Dynamic - PreReq for many plugins to work properly." on
-         4 "Mapchooser_Extended - {$RED}1.10.0{$NC} - Creates map vote at the end of each match. Controlled by maplist.cfg and mapcycle.cfg." on
-         5 "SlopeFix - Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)" on
-         6 "ServerAdvertisements - Used to greet joining players and post information via chat box" off
-         7 "CallAdmin - Allows players to report players in game to your Discord/TS server. {$RED}Requires Discord_API{$NC}" off
-         8 "csgo_gun_menu - Allows users to pick a gun and a pistol while surfing." off
-         9 "Discord_API - Allows plugins to tie into your discord server. {$RED}Required if using CallAdmin{$NC}" off)
-         10 "Nominations_Extended - Use with MapChooser_Extended to allow players to nominate maps." off
-         11 "sm_skinchooser - Used to allow players to equip models (aka skins for their player model)" off
-         12 "Store - Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off
-         13 "hex_chat - Chat Tags/Colors Plugin. Can give Admins/VIPs special Chat Tags/Colors" off
-         14 "thirdperson - Allows players to view their player model in thirdperson." off
-         15 "chat-procesor - Chat procesing Plugin." on
+options=(1 "SurfTimer - {$RED}2.02{$NC} - Core of this server." on # any option can be set to default to "on"
+         2 "AutoFileLoader - Caches all material, model, and sound files for players to download." on
+         3 "CallAdmin - Allows players to report players in game to your Discord/TS server. {$RED}Requires Discord_API{$NC}" off
+         4 "Chat-Procesor - Chat Processing Plugin" on
+         5 "Dynamic - PreReq for many plugins to work properly." on
+         6 "FixAngles - Fixes 'wrong angle on material' error that gets spammed in console when using store items" on
+         7 "GunMenu 1.2 - Adds a gun selection menu for players to pick a weapon to surf with" off  
+         8 "Hex-Tags - Tag/Color system for Chat and Scoreboard" off
+         9 "Mapchooser_Extended - {$RED}1.10.0{$NC} - Creates map vote at the end of each match. Controlled by maplist.cfg and mapcycle.cfg." on
+         10 "MOTDF - Fixes MOTD messages" on
+         11 "Movement-Unlocker - Unlocks max speed allowing higher surf speeds" off
+         12 "RampSlopeFix - Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)" on
+         13 "ServerAdvertisements - Used to greet joining players and post information via chat box" off
+         11 "Skinchooser-4.9 - Used to allow players to equip models (aka skins for their player model)" off
+         12 "Zeph-Store-1.2 - Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off
+         13 "TooLateToBan - Allows Admins to ban users after they have left the server via Admin Menu" off
+         14 "Updater - Automatically updates plugins. {$RED}ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!{$NC}" on
+
 choices=$("${cmd[@]}" "${options[@]}" 2>&1 >/dev/tty)
 clear
 for choice in $choices
@@ -210,46 +213,46 @@ do
             echo "AutoFileLoader - Caches all material, model, and sound files for players to download."
             ;;
         3)
+            echo "CallAdmin - Allows players to report players in game to your Discord/TS server. {$RED}Requires Discord_API{$NC}"
+            ;;
+        4)
+            echo "Chat-Procesor - Chat Processing Plugin"
+            ;;
+        4)
             echo "Dynamic - PreReq for many plugins to work properly."
+            ;;
+        4)
+            echo "FixAngles - Fixes 'wrong angle on material' error that gets spammed in console when using store items"
+            ;;
+        4)
+            echo "GunMenu 1.2 - Adds a gun selection menu for players to pick a weapon to surf with"
             ;;
         4)
             echo "Mapchooser_Extended - {$RED}1.10.0{$NC} - Creates map vote at the end of each match. Controlled by maplist.cfg and mapcycle.cfg."
             ;;
         4)
-            echo "SlopeFix - Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)"
+            echo "MOTDF - Fixes MOTD messages"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "Movement-Unlocker - Unlocks max speed allowing higher surf speeds"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "RampSlopeFix - Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "ServerAdvertisements - Used to greet joining players and post information via chat box"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "Skinchooser-4.9 - Used to allow players to equip models (aka skins for their player model)"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "Zeph-Store-1.2 - Allows players to purchase pets, hats, masks, etc. This requires a FastDL!"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "TooLateToBan - Allows Admins to ban users after they have left the server via Admin Menu"
             ;;
         4)
-            echo "Dynamic - PreReq for many plugins to work properly."
-            ;;
-        4)
-            echo "Dynamic - PreReq for many plugins to work properly."
-            ;;
-        4)
-            echo "Dynamic - PreReq for many plugins to work properly."
-            ;;
-        4)
-            echo "Dynamic - PreReq for many plugins to work properly."
-            ;;
-        4)
-            echo "Dynamic - PreReq for many plugins to work properly."
+            echo "Updater - Automatically updates plugins. {$RED}ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!{$NC}"
             ;;
     esac
 done
