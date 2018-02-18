@@ -67,6 +67,7 @@ if [ $opt != "KillingFloor2" ]; then
     echo "ERROR: Cannot add i386 architecture..."
     exit 1
   fi
+fi
 
 echo "Installing required packages..."
 aptitude update >/dev/null
@@ -90,17 +91,15 @@ fi
     rm steamcmd_linux.tar.gz*;
     cd ~/steamcmd;
     # download srcds for csgo (740)
-  ./steamcmd.sh +login anonymous +force_install_dir $server_type +app_update 740 validate +quit;
-fi
-done
+  ./steamcmd.sh +login anonymous +force_install_dir $server_dir +app_update 740 validate +quit;
 
 if [[ $opt="Surf"} ]]; then
   echo -e "Surf Server Install starting";
-  server_dir="$HOME/csgo_surf/csgo"
-  configs="$HOME/github/$server_dir/csgo/addons/sourcemod/configs/"
-  cd_dir="eval cd "$HOME/github/$server_dir/csgo/""
+  server_dir="$HOME/Surf/csgo"
+  configs="$HOME/github/Surf/addons/sourcemod/configs/"
+  cd_dir="eval cd "$HOME/github/Surf/csgo/""
 
-  echo -e "${RED}Removing Existing Addons Directory if Applicable. If You Don't Have an installed server to csgo_surf, then this will Do nothing and is safe. Script will continue in 10 Secs...${NC}" && sleep 10
+  echo -e "${RED}Removing Existing Addons Directory if Applicable. If You Don't Have an installed server to Surf, then this will Do nothing and is safe. Script will continue in 10 Secs...${NC}" && sleep 10
   rm -rf $server_dir/addons
 
   # make addons folder
@@ -110,8 +109,8 @@ if [[ $opt="Surf"} ]]; then
   echo -e "${GREEN}Installing Metamod...${NC}" && sleep 2
   for dest in $server_dir/addons
   do
-  cp -rf $HOME/githu b/$server_dir/csgo/addons/metamod $dest
-  cp -rf $HOME/github/$server_dir/csgo/addons/metamod.vdf $dest
+  cp -rf $HOME/github/$server_dir/addons/metamod $dest
+  cp -rf $HOME/github/$server_dir/addons/metamod.vdf $dest
   done 
 
   # sourcemod
@@ -124,13 +123,13 @@ if [[ $opt="Surf"} ]]; then
   echo -e "${GREEN}Installing Stripper Files...${NC}" && sleep 2
   for dest in $server_dir/addons/
   do
-  cp -rf $HOME/github/$server_dir/csgo/addons/stripper $dest
+  cp -rf $HOME/github/$server_dir/addons/stripper $dest
   done
 
   echo -e "${GREEN}Copying Over Pre-Configured SourceMod Config & Plugins...${NC}" && sleep 2
   for dest in $server_dir/addons/
   do
-  cp -rf $HOME/github/$server_dir/csgo/addons/sourcemod $dest
+  cp -rf $HOME/github/$server_dir/addons/sourcemod $dest
   done
 
   echo -e "${GREEN}Copying Over Pre-Configured Config Files...${NC}" && sleep 2
@@ -138,8 +137,8 @@ if [[ $opt="Surf"} ]]; then
   rm -rf "$configs\database.cfg" "$configs\admins.cfg" "$configs\admin_groups.cfg"
   for dest in $server_dir/cfg/
   do
-  cp -rf $HOME/github/$server_dir/csgo/cfg/sourcemod $dest
-  cp -rf $HOME/github/$server_dir/csgo/cfg/* $dest
+  cp -rf $HOME/github/$server_dir/cfg/sourcemod $dest
+  cp -rf $HOME/github/$server_dir/cfg/* $dest
   done
 
   # map files
@@ -153,8 +152,8 @@ if [[ $opt="Surf"} ]]; then
 
   for dest in $server_dir
   do
-  cp -rf $HOME/github/$server_dir/csgo/maplist.txt $dest
-  cp -rf $HOME/github/$server_dir/csgo/cfg/mapcycle.txt $dest
+  cp -rf $HOME/github/$server_dir/maplist.txt $dest
+  cp -rf $HOME/github/$server_dir/cfg/mapcycle.txt $dest
   done
 
   #Extract maps.tar.bz2
@@ -172,7 +171,7 @@ if [[ $opt="Surf"} ]]; then
 
   # Copy start script and start server
   echo -e "${GREEN}Copying Over Start Script and Starting Server...${NC}" && sleep 5
-  for dest in $HOME/csgo_surf
+  for dest in $HOME/Surf
   do
   cp -rf $HOME/github/$server_dir/scripts/start.sh $dest && cd $dest && sh start.sh
   done
