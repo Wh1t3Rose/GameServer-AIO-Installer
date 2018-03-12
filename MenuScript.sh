@@ -18,55 +18,154 @@
 #                                                                                #
 #  Website: https://snthtk.darktech.org                                          #
 #                                                                                #
-#                                                                                #
+# PSST! I love you! <3
 
-# Check distrib
+#					#
+### Colors & Vars ###
+#					#
+
+RED='\e[1;31m'
+GRE='\e[1;32m'
+CYN='\e[1;36m'
+NC='\033[0m' # No Color                                                                              #
+
+#					#
+### Check distrib ###
+#					#
+
 if ! [ -x "$(command -v aptitude)" ]; then
-  echo -e "{$RED}Error: Distro not supported.${NC}" >&2
-  exit 1
+  echo -ne "${RED}Error: Distro not supported.${NC}"'\n' >&2
+  exit 1;
 fi
 
-# Check root
-if [ $(id -u) -ne 0 ]; then 
-  echo -e "{$RED}Ur not Root bro${NC}"; 
+#				  #
+###  Check root ###
+#				  #
+
+if [ "$(id -u)" -ne 0 ]; then 
+  echo -ne "${RED}Ur not Root bro! Run with sudo :)${NC}"'\n'; 
   exit 1; 
 fi
 
-# Vars
-#...
-
-# Colors
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-NC='\033[0m' # No Color
+#					   #
+### Server Type Menu ###
+#					   #
 
 PS3='Please select your server type:'
-options=("CSGO-SURF" "CSGO-Retakes" "CSGO-Arena" "KillingFloor2")
-select opt in "${options[@]}" "Quit"; do 
+options=("CSGO-SURF" "CSGO-Retakes" "CSGO-Arena" "KillingFloor2" "Quit")
+select opt in "${options[@]}"; 
+do 
      case "$opt" in
        "CSGO-SURF")
             server_type="Surf";
-            echo "you chose Surf" ;;
+            echo "you chose Surf" ;
+            break ;;
        "CSGO-Retakes")
-            server_type = "Retakes";
-            echo "you chose Retakes" ;;
+            server_type="Retakes";
+            echo "you chose Retakes" ;
+            break ;;
        "CSGO-Arena")
-            server_type = "Arena";
-            echo "you chose Arena" ;;
+            server_type="Arena";
+            echo "you chose Arena" ;
+            break ;;
         "KillingFloor2")
-            server_type = "KF2";
-            echo "you chose KF2" ;;
+            server_type="KF2";
+            echo "you chose KF2" ;
+            break ;;
        "Quit")
             break ;;
        *) echo invalid option ;;
     esac
-if [ $opt != "KillingFloor2" ]; then
+done
+
+#							#
+### CSGO Plugin selection ###
+#
+
+options=(
+         "SurfTimer - 2.02 - Core of this server."
+         "AutoFileLoader - Caches all material, model, and sound files for players to download."
+         "Chat-Procesor - Chat Processing Plugin"
+         "Dynamic - PreReq for many plugins to work properly."
+         "FixAngles - Fixes 'wrong angle on material' error that gets spammed in console when using store items"
+         "Mapchooser_Extended - Map Vote System. See maplist.cfg/mapcycle.cfg."
+         "MOTDF - Fixes MOTD messages"
+         "RampSlopeFix - Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)"
+         "Updater - Automatically updates plugins. ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!"
+         "CallAdmin - Allows players to report players in game to your Discord/TS server. Requires Discord_API"
+         "GunMenu 1.2 - Adds a gun selection menu for players to pick a weapon to surf with"
+         "Hex-Tags - Tag/Color system for Chat and Scoreboard"
+         "Movement-Unlocker - Unlocks max speed allowing higher surf speeds"
+         "ServerAdvertisements - Used to greet joining players and post information via chat box"
+         "Skinchooser-4.9 - Used to allow players to equip models (aka skins for their player model)"
+         "Zeph-Store-1.2 - Allows players to purchase pets, hats, masks, etc. This requires a FastDL!"
+         "TooLateToBan - Allows Admins to ban users after they have left the server via Admin Menu")
+ 
+menu() {
+    clear
+    echo -e "${CYN}Pick your Plugins:${NC}\n"
+    for i in ${!options[@]}; do
+        printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}"
+    done
+}
+prompt="Check an option (again to uncheck, ENTER when done): "
+
+[[ "$num" =~ "-" ]] && num=$(seq $(sed -E 's/(\d*)-(\d*)/\1 \2/' <<<"$num")) # Allow number Range 
+while menu && read -rp "$prompt" num && [[ "$num" ]]; do
+  for i in $num; do
+    ((i--))
+    [[ "${choices[i]}" ]] && choices[i]="" || choices[i]="*"
+  done
+done
+
+for i in ${!options[@]}; do
+    [[ "${choices[i]}" ]] && { printf " %s" "${options[i]}";}
+done
+
+
+
+#										   	#
+### (Whiptail Menu) CSGO Plugin selection ###
+#											#
+
+: '							
+
+if [[ "$opt" = "CSGO-SURF" ]]; then
+	plugins=$(whiptail --title "Test Checklist Dialog" --radiolist \
+	"Choose your plugins" 25 140 18 \
+	"SurfTimer - 2.02"   	"Core of this server." ON \
+	"AutoFileLoader"     	"Caches all material, model, and sound files for players to download." ON \
+	"Chat-Procesor"      	"Chat Processing Plugin" on \
+	"Dynamic" 			 	"PreReq for many plugins to work properly." on \
+	"FixAngles"			 	"Fixes 'wrong angle on material error' that gets spammed in console when using store items" on \
+	"Mapchooser_Extended" 	"Map Vote System. See maplist.cfg/mapcycle.cfg." on \
+	"MOTDF" 				"Fixes MOTD messages" on \
+ 	"RampSlopeFix"			"Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)" on \
+ 	"Updater" 				"Automatically updates plugins. ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!" on \
+	"CallAdmin"				"Allows players to report players in game to your Discord/TS server. Requires Discord_API" off \
+	"GunMenu 1.2"			"Adds a gun selection menu for players to pick a weapon to surf with" off \
+	"Hex-Tags"				"Tag/Color system for Chat and Scoreboard" off \
+	"Movement-Unlocker"		"Unlocks max speed allowing higher surf speeds" off \
+	"ServerAdvertisements"	"Used to greet joining players and post information via chat box" off \
+	"Skinchooser-4.9" 		"Used to allow players to equip models (aka skins for their player model)" off \
+	"Zeph-Store-1.2"		"Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off \
+	"TooLateToBan"			"Allows Admins to ban users after they have left the server via Admin Menu" off 3>&1 1>&2 2>&3)
+fi
+
+'
+
+#							  #
+### Required Packages Check ###
+#							  #
+
+if [ "$opt" != "KillingFloor2" ]; then
   echo "Adding i386 architecture..."
   dpkg --add-architecture i386 >/dev/null
   if [ "$?" -ne "0" ]; then
     echo "ERROR: Cannot add i386 architecture..."
     exit 1
   fi
+fi
 
 echo "Installing required packages..."
 aptitude update >/dev/null
@@ -75,75 +174,93 @@ if [ "$?" -ne "0" ]; then
   echo "ERROR: Cannot install required packages..."
   exit 1
 fi
-  # Dowload Base Files
-  echo "Running Base System Download Script...";
-    server_dir="$HOME/$server_type";
 
-    cd $HOME;
-    echo -e "${RED}Deleting steamcmd & $server_type directories if they exist...${NC}" && sleep 2;
-    rm -rf ~/steamcmd; 
-    rm -rf ~/$server_type;
-    echo -e "${GREEN}Downloading & Installing SteamCmd...${NC}" && sleep 2;
-    wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz;
-    mkdir ~/steamcmd;
-    tar -xvzf steamcmd_linux.tar.gz -C steamcmd;
-    rm steamcmd_linux.tar.gz*;
-    cd ~/steamcmd;
-    # download srcds for csgo (740)
-  ./steamcmd.sh +login anonymous +force_install_dir $server_type +app_update 740 validate +quit;
+#					#
+### DL Base Files ###
+#					#
+
+echo "Running Base System Download Script...";
+server_dir="$HOME/$server_type";
+
+cd $HOME;
+echo -ne "${RED}Deleting steamcmd & $server_type directories if they exist...${NC}" && sleep 2;
+rm -rf ~/steamcmd; 
+rm -rf ~/$server_type;
+echo -ne "${GREEN}Downloading & Installing SteamCmd...${NC}" && sleep 2;
+wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz;
+mkdir ~/steamcmd;
+tar -xvzf steamcmd_linux.tar.gz -C steamcmd;
+rm steamcmd_linux.tar.gz*;
+cd ~/steamcmd;
+# download srcds for csgo (740)
+./steamcmd.sh +login anonymous +force_install_dir $server_dir +app_update 740 validate +quit;
+
+if [[ "$opt" = "Surf" ]]; then
+  echo -ne "Surf Server Install starting";
+  server_dir="$HOME/Retakes/csgo"
+  configs="$HOME/github/Surf/addons/sourcemod/configs/"
+  cd_dir="eval cd "$HOME/github/Surf/csgo/""
 fi
-done
 
-if [[ $opt="Surf"} ]]; then
-  echo -e "Surf Server Install starting";
-  server_dir="$HOME/csgo_surf/csgo"
-  configs="$HOME/github/$server_dir/csgo/addons/sourcemod/configs/"
-  cd_dir="eval cd "$HOME/github/$server_dir/csgo/""
+if [[ "$opt" = "Retakes" ]]; then
+  echo -ne "Retakes Server Install starting";
+  server_dir="$HOME/Retakes/csgo"
+  configs="$HOME/github/Retakes/addons/sourcemod/configs/"
+  cd_dir="eval cd "$HOME/github/Retakes/csgo/""
+fi
 
-  echo -e "${RED}Removing Existing Addons Directory if Applicable. If You Don't Have an installed server to csgo_surf, then this will Do nothing and is safe. Script will continue in 10 Secs...${NC}" && sleep 10
+if [[ "$opt" = "Arena" ]]; then
+  echo -ne "Arena Server Install starting";
+  mkdir $HOME/Arena/csgo
+  server_dir="$HOME/Arena/csgo"
+  configs="$HOME/github/Arena/addons/sourcemod/configs/"
+  cd_dir="eval cd "$HOME/github/Arena/csgo/""
+fi
+
+  echo -ne "${RED}Removing Existing Addons Directory if Applicable. If You Don't Have an installed server to Surf, then this will Do nothing and is safe. Script will continue in 10 Secs...${NC}" && sleep 10
   rm -rf $server_dir/addons
 
   # make addons folder
   test -e $server_dir/addons || mkdir $server_dir/addons
 
   # metamod
-  echo -e "${GREEN}Installing Metamod...${NC}" && sleep 2
+  echo -ne "${GREEN}Installing Metamod...${NC}" && sleep 2
   for dest in $server_dir/addons
   do
-  cp -rf $HOME/githu b/$server_dir/csgo/addons/metamod $dest
-  cp -rf $HOME/github/$server_dir/csgo/addons/metamod.vdf $dest
+  cp -rf $HOME/github/$server_dir/addons/metamod $dest
+  cp -rf $HOME/github/$server_dir/addons/metamod.vdf $dest
   done 
 
   # sourcemod
-  echo -e "${GREEN}Downloading & Installing Sourcemod...${NC}" && sleep 2
+  echo -ne "${GREEN}Downloading & Installing Sourcemod...${NC}" && sleep 2
   url=$(curl -s https://sm.alliedmods.net/smdrop/1.8/sourcemod-latest-linux)
   wget "https://sm.alliedmods.net/smdrop/1.8/$url"
   tar -xvzf "${url##*/}" -C $server_dir
 
   # Stripper Files
-  echo -e "${GREEN}Installing Stripper Files...${NC}" && sleep 2
+  echo -ne "${GREEN}Installing Stripper Files...${NC}" && sleep 2
   for dest in $server_dir/addons/
   do
-  cp -rf $HOME/github/$server_dir/csgo/addons/stripper $dest
+  cp -rf $HOME/github/$server_dir/addons/stripper $dest
   done
 
-  echo -e "${GREEN}Copying Over Pre-Configured SourceMod Config & Plugins...${NC}" && sleep 2
+  echo -ne "${GREEN}Copying Over Pre-Configured SourceMod Config & Plugins...${NC}" && sleep 2
   for dest in $server_dir/addons/
   do
-  cp -rf $HOME/github/$server_dir/csgo/addons/sourcemod $dest
+  cp -rf $HOME/github/$server_dir/addons/sourcemod $dest
   done
 
-  echo -e "${GREEN}Copying Over Pre-Configured Config Files...${NC}" && sleep 2
+  echo -ne "${GREEN}Copying Over Pre-Configured Config Files...${NC}" && sleep 2
   # cfg files
   rm -rf "$configs\database.cfg" "$configs\admins.cfg" "$configs\admin_groups.cfg"
   for dest in $server_dir/cfg/
   do
-  cp -rf $HOME/github/$server_dir/csgo/cfg/sourcemod $dest
-  cp -rf $HOME/github/$server_dir/csgo/cfg/* $dest
+  cp -rf $HOME/github/$server_dir/cfg/sourcemod $dest
+  cp -rf $HOME/github/$server_dir/cfg/* $dest
   done
 
   # map files
-  echo -e "${GREEN}Installing Map Files...${NC}" && sleep 2
+  echo -ne "${GREEN}Installing Map Files...${NC}" && sleep 2
   wget -0 $server_dir/maps.tar.bz2 "http://www.snthtk.darktech.org/forum/sharedfiles/maps.tar.bz2"
   for dest in $server_dir/
   do
@@ -153,15 +270,15 @@ if [[ $opt="Surf"} ]]; then
 
   for dest in $server_dir
   do
-  cp -rf $HOME/github/$server_dir/csgo/maplist.txt $dest
-  cp -rf $HOME/github/$server_dir/csgo/cfg/mapcycle.txt $dest
+  cp -rf $HOME/github/$server_dir/maplist.txt $dest
+  cp -rf $HOME/github/$server_dir/cfg/mapcycle.txt $dest
   done
 
   #Extract maps.tar.bz2
   tar -xvjf $server_dir/maps.tar.bz2 -C $server_dir/csgo && rm -f && rm '$server_dir/maps.tar.bz2' -f
 
   # extract individual maps and nav files
-  echo -e "${RED}Still Installing Map Files Please Be Patient...${NC}" && sleep 5
+  echo -ne "${RED}Still Installing Map Files Please Be Patient...${NC}" && sleep 5
   for i in $server_dir/maps/*.bsp.bz2; do 
       bzip2 -d "$i"
   done
@@ -171,26 +288,28 @@ if [[ $opt="Surf"} ]]; then
   done
 
   # Copy start script and start server
-  echo -e "${GREEN}Copying Over Start Script and Starting Server...${NC}" && sleep 5
-  for dest in $HOME/csgo_surf
+  echo -ne "${GREEN}Copying Over Start Script and Starting Server...${NC}" && sleep 5
+  for dest in $HOME/Surf
   do
   cp -rf $HOME/github/$server_dir/scripts/start.sh $dest && cd $dest && sh start.sh
   done
-fi
-done
 
-if [[ $opt="Retakes" ]]; then
-  echo -e "Retakes Server Install starting";
 
+if [ $opt != "KillingFloor2" ]; then
+  echo "Adding i386 architecture..."
+  dpkg --add-architecture i386 >/dev/null
+  if [ "$?" -ne "0" ]; then
+    echo "ERROR: Cannot add i386 architecture..."
+    exit 1
+  fi
 fi
-done
 
-if [[ $opt="Arena" ]]; then
-  echo -e "blah";
-fi
-done
 
-if [[ $opt="KF2" ]]; then
-  echo -e "blah blah";
+if [[ "$opt" = "Arena" ]]; then
+  echo -ne "blah";
 fi
-done
+
+
+if [[ "$opt" = "KF2" ]]; then
+  echo -ne "blah blah";
+fi
