@@ -18,38 +18,38 @@
 #                                                                                #
 #  Website: https://snthtk.darktech.org                                          #
 #                                                                                #
-# PSST! I love you! <3
+# PSST! I love you! <3                                                           #
 
-#					#
+#                   #
 ### Colors & Vars ###
-#					#
+#                   #
 
 RED='\e[1;31m'
 GRE='\e[1;32m'
 CYN='\e[1;36m'
 NC='\033[0m' # No Color                                                                              #
 
-#					#
+#                   #
 ### Check distrib ###
-#					#
+#                   #
 
 if ! [ -x "$(command -v aptitude)" ]; then
   echo -ne "${RED}Error: Distro not supported.${NC}"'\n' >&2
   exit 1;
 fi
 
-#				  #
+#                 #
 ###  Check root ###
-#				  #
+#                 #
 
 if [ "$(id -u)" -ne 0 ]; then 
   echo -ne "${RED}Ur not Root bro! Run with sudo :)${NC}"'\n'; 
   exit 1; 
 fi
 
-#					   #
+#                      #
 ### Server Type Menu ###
-#					   #
+#                      #
 
 PS3='Please select your server type:'
 options=("CSGO-SURF" "CSGO-Retakes" "CSGO-Arena" "KillingFloor2" "Quit")
@@ -78,9 +78,9 @@ do
     esac
 done
 
-#							#
+#                           #
 ### CSGO Plugin selection ###
-#
+#                           #
 
 options=(
          "SurfTimer - 2.02 - Core of this server."
@@ -122,41 +122,40 @@ for i in ${!options[@]}; do
     [[ "${choices[i]}" ]] && { printf " %s" "${options[i]}";}
 done
 
-
-
-#										   	#
-### (Whiptail Menu) CSGO Plugin selection ###
-#											#
-
-: '							
-
-if [[ "$opt" = "CSGO-SURF" ]]; then
-	plugins=$(whiptail --title "Test Checklist Dialog" --radiolist \
-	"Choose your plugins" 25 140 18 \
-	"SurfTimer - 2.02"   	"Core of this server." ON \
-	"AutoFileLoader"     	"Caches all material, model, and sound files for players to download." ON \
-	"Chat-Procesor"      	"Chat Processing Plugin" on \
-	"Dynamic" 			 	"PreReq for many plugins to work properly." on \
-	"FixAngles"			 	"Fixes 'wrong angle on material error' that gets spammed in console when using store items" on \
-	"Mapchooser_Extended" 	"Map Vote System. See maplist.cfg/mapcycle.cfg." on \
-	"MOTDF" 				"Fixes MOTD messages" on \
- 	"RampSlopeFix"			"Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)" on \
- 	"Updater" 				"Automatically updates plugins. ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!" on \
-	"CallAdmin"				"Allows players to report players in game to your Discord/TS server. Requires Discord_API" off \
-	"GunMenu 1.2"			"Adds a gun selection menu for players to pick a weapon to surf with" off \
-	"Hex-Tags"				"Tag/Color system for Chat and Scoreboard" off \
-	"Movement-Unlocker"		"Unlocks max speed allowing higher surf speeds" off \
-	"ServerAdvertisements"	"Used to greet joining players and post information via chat box" off \
-	"Skinchooser-4.9" 		"Used to allow players to equip models (aka skins for their player model)" off \
-	"Zeph-Store-1.2"		"Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off \
-	"TooLateToBan"			"Allows Admins to ban users after they have left the server via Admin Menu" off 3>&1 1>&2 2>&3)
+if [[ ${options} = 1]] then 
+  echo -ne "Choice 1 was selected"
 fi
+#                                           #
+### (Whiptail Menu) CSGO Plugin selection ###
+#                                           #
 
+: '             
+if [[ "$opt" = "CSGO-SURF" ]]; then
+  plugins=$(whiptail --title "Test Checklist Dialog" --radiolist \
+  "Choose your plugins" 25 140 18 \
+  "SurfTimer - 2.02"    "Core of this server." ON \
+  "AutoFileLoader"      "Caches all material, model, and sound files for players to download." ON \
+  "Chat-Procesor"       "Chat Processing Plugin" on \
+  "Dynamic"         "PreReq for many plugins to work properly." on \
+  "FixAngles"       "Fixes 'wrong angle on material error' that gets spammed in console when using store items" on \
+  "Mapchooser_Extended"   "Map Vote System. See maplist.cfg/mapcycle.cfg." on \
+  "MOTDF"         "Fixes MOTD messages" on \
+  "RampSlopeFix"      "Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)" on \
+  "Updater"         "Automatically updates plugins. ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!" on \
+  "CallAdmin"       "Allows players to report players in game to your Discord/TS server. Requires Discord_API" off \
+  "GunMenu 1.2"     "Adds a gun selection menu for players to pick a weapon to surf with" off \
+  "Hex-Tags"        "Tag/Color system for Chat and Scoreboard" off \
+  "Movement-Unlocker"   "Unlocks max speed allowing higher surf speeds" off \
+  "ServerAdvertisements"  "Used to greet joining players and post information via chat box" off \
+  "Skinchooser-4.9"     "Used to allow players to equip models (aka skins for their player model)" off \
+  "Zeph-Store-1.2"    "Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off \
+  "TooLateToBan"      "Allows Admins to ban users after they have left the server via Admin Menu" off 3>&1 1>&2 2>&3)
+fi
 '
 
-#							  #
+#                             #
 ### Required Packages Check ###
-#							  #
+#                             #
 
 if [ "$opt" != "KillingFloor2" ]; then
   echo "Adding i386 architecture..."
@@ -175,9 +174,9 @@ if [ "$?" -ne "0" ]; then
   exit 1
 fi
 
-#					#
+#                   #
 ### DL Base Files ###
-#					#
+#                   #
 
 echo "Running Base System Download Script...";
 server_dir="$HOME/$server_type";
@@ -302,11 +301,6 @@ if [ $opt != "KillingFloor2" ]; then
     echo "ERROR: Cannot add i386 architecture..."
     exit 1
   fi
-fi
-
-
-if [[ "$opt" = "Arena" ]]; then
-  echo -ne "blah";
 fi
 
 
