@@ -166,6 +166,7 @@ if [ "$opt" != "KillingFloor2" ]; then
   fi
 fi
 
+install_preqs () {
 echo "Installing required packages..."
 aptitude update >/dev/null
 aptitude install -y -q libc6-i386 lib32stdc++6 lib32gcc1 lib32ncurses5 lib32z1 curl gdb screen tar wget >/dev/null
@@ -173,6 +174,7 @@ if [ "$?" -ne "0" ]; then
   echo "ERROR: Cannot install required packages..."
   exit 1
 fi
+}
 
 #                   #
 ### DL Base Files ###
@@ -305,5 +307,14 @@ fi
 
 
 if [[ "$opt" = "KF2" ]]; then
-  echo -ne "blah blah";
+  echo -ne "Starting KF2 Install...";
+  mkdir $HOME/KF2-Server && mkdir $HOME/steamcmd
+  wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz;
+  tar -xvzf steamcmd_linux.tar.gz -C steamcmd;
+  rm steamcmd_linux.tar.gz*;
+  cd ~/steamcmd;
+  # download KF2 Server (232130)
+  ./steamcmd.sh +login anonymous +force_install_dir $server_dir +app_update 232130 validate +quit;
+  server_dir="$HOME/KF2-Server/"
+  configs="$HOME/KF2-Server/configs"
 fi
