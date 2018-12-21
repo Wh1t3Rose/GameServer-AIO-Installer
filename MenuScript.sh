@@ -34,7 +34,7 @@ NC='\033[0m' # No Color                                                         
 #                   #
 
 if ! [ -x "$(command -v aptitude)" ]; then
-  echo -ne "${RED}Error: Distro not supported.${NC}"'\n' >&2
+  echo -ne "${RED}Error: Distro not supported. Only Ubuntu Distros and derivatives supported at this time. More distro support coming soon! Sorry!${NC}"'\n' >&2
   exit 1;
 fi
 
@@ -58,19 +58,26 @@ do
      case "$opt" in
        "CSGO-SURF")
             server_type="Surf";
-            echo "you chose Surf" ;
+            echo "you chose Surf";
+            install_preqs
+            sh scripts/csgo-surf.sh;
             break ;;
        "CSGO-Retakes")
             server_type="Retakes";
-            echo "you chose Retakes" ;
+            echo "you chose Retakes";
+            install_preqs
+            sh scripts/csgo-retakes.sh ;
             break ;;
        "CSGO-Arena")
             server_type="Arena";
             echo "you chose Arena" ;
+            install_preqs
+            sh scripts/csgo-arena.sh;
             break ;;
         "KillingFloor2")
             server_type="KF2";
-            echo "you chose KF2" ;
+            echo "you chose KF2" 
+            sh scripts/kf2-install.sh;;
             break ;;
        "Quit")
             break ;;
@@ -78,93 +85,9 @@ do
     esac
 done
 
-#                           #
-### CSGO Plugin selection ###
-#                           #
-
-options=(
-         "SurfTimer - 2.02 - Core of this server."
-         "AutoFileLoader - Caches all material, model, and sound files for players to download."
-         "Chat-Procesor - Chat Processing Plugin"
-         "Dynamic - PreReq for many plugins to work properly."
-         "FixAngles - Fixes 'wrong angle on material' error that gets spammed in console when using store items"
-         "Mapchooser_Extended - Map Vote System. See maplist.cfg/mapcycle.cfg."
-         "MOTDF - Fixes MOTD messages"
-         "RampSlopeFix - Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)"
-         "Updater - Automatically updates plugins. ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!"
-         "CallAdmin - Allows players to report players in game to your Discord/TS server. Requires Discord_API"
-         "GunMenu 1.2 - Adds a gun selection menu for players to pick a weapon to surf with"
-         "Hex-Tags - Tag/Color system for Chat and Scoreboard"
-         "Movement-Unlocker - Unlocks max speed allowing higher surf speeds"
-         "ServerAdvertisements - Used to greet joining players and post information via chat box"
-         "Skinchooser-4.9 - Used to allow players to equip models (aka skins for their player model)"
-         "Zeph-Store-1.2 - Allows players to purchase pets, hats, masks, etc. This requires a FastDL!"
-         "TooLateToBan - Allows Admins to ban users after they have left the server via Admin Menu")
- 
-menu() {
-    clear
-    echo -e "${CYN}Pick your Plugins:${NC}\n"
-    for i in ${!options[@]}; do
-        printf "%3d%s) %s\n" $((i+1)) "${choices[i]:- }" "${options[i]}"
-    done
-}
-prompt="Check an option (again to uncheck, ENTER when done): "
-
-[[ "$num" =~ "-" ]] && num=$(seq $(sed -E 's/(\d*)-(\d*)/\1 \2/' <<<"$num")) # Allow number Range 
-while menu && read -rp "$prompt" num && [[ "$num" ]]; do
-  for i in $num; do
-    ((i--))
-    [[ "${choices[i]}" ]] && choices[i]="" || choices[i]="*"
-  done
-done
-
-for i in ${!options[@]}; do
-    [[ "${choices[i]}" ]] && { printf " %s" "${options[i]}";}
-done
-
-if [[ ${options} = 1]] then 
-  echo -ne "Choice 1 was selected"
-fi
-#                                           #
-### (Whiptail Menu) CSGO Plugin selection ###
-#                                           #
-
-: '             
-if [[ "$opt" = "CSGO-SURF" ]]; then
-  plugins=$(whiptail --title "Test Checklist Dialog" --radiolist \
-  "Choose your plugins" 25 140 18 \
-  "SurfTimer - 2.02"    "Core of this server." ON \
-  "AutoFileLoader"      "Caches all material, model, and sound files for players to download." ON \
-  "Chat-Procesor"       "Chat Processing Plugin" on \
-  "Dynamic"         "PreReq for many plugins to work properly." on \
-  "FixAngles"       "Fixes 'wrong angle on material error' that gets spammed in console when using store items" on \
-  "Mapchooser_Extended"   "Map Vote System. See maplist.cfg/mapcycle.cfg." on \
-  "MOTDF"         "Fixes MOTD messages" on \
-  "RampSlopeFix"      "Smooths out ramps and prevents clipping with player models. (Eg. no more sudden stopping when surfing)" on \
-  "Updater"         "Automatically updates plugins. ONLY WORKS ON PLUGINS THAT HAVE BUILTIN SUPPORT!" on \
-  "CallAdmin"       "Allows players to report players in game to your Discord/TS server. Requires Discord_API" off \
-  "GunMenu 1.2"     "Adds a gun selection menu for players to pick a weapon to surf with" off \
-  "Hex-Tags"        "Tag/Color system for Chat and Scoreboard" off \
-  "Movement-Unlocker"   "Unlocks max speed allowing higher surf speeds" off \
-  "ServerAdvertisements"  "Used to greet joining players and post information via chat box" off \
-  "Skinchooser-4.9"     "Used to allow players to equip models (aka skins for their player model)" off \
-  "Zeph-Store-1.2"    "Allows players to purchase pets, hats, masks, etc. This requires a FastDL!" off \
-  "TooLateToBan"      "Allows Admins to ban users after they have left the server via Admin Menu" off 3>&1 1>&2 2>&3)
-fi
-'
-
-#                             #
-### Required Packages Check ###
-#                             #
-
-if [ "$opt" != "KillingFloor2" ]; then
-  echo "Adding i386 architecture..."
-  dpkg --add-architecture i386 >/dev/null
-  if [ "$?" -ne "0" ]; then
-    echo "ERROR: Cannot add i386 architecture..."
-    exit 1
-  fi
-fi
+#                   #
+### Install Preqs   #
+#                   #
 
 install_preqs () {
 echo "Installing required packages..."
