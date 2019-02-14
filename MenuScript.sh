@@ -59,25 +59,33 @@ do
        "CSGO-SURF")
             server_type="Surf";
             echo "you chose Surf";
-            install_preqs
+            ModId = "740";
+            install_preqs;
+            sh scripts/srcds-base.sh;
             sh scripts/csgo-surf.sh;
             break ;;
        "CSGO-Retakes")
             server_type="Retakes";
             echo "you chose Retakes";
-            install_preqs
+            ModId = "740";
+            install_preqs;
+            sh scripts/srcds-base.sh;
             sh scripts/csgo-retakes.sh ;
             break ;;
        "CSGO-Arena")
             server_type="Arena";
-            echo "you chose Arena" ;
-            install_preqs
+            echo "you chose Arena";
+            ModId = "740";
+            install_preqs;
+            sh scripts/srcds-base.sh;
             sh scripts/csgo-arena.sh;
             break ;;
         "KillingFloor2")
             server_type="KF2";
-            echo "you chose KF2" 
-            sh scripts/kf2-install.sh;;
+            echo "you chose KF2";
+            ModId = "232130";
+            sh scripts/srcds-base.sh;
+            sh scripts/kf2-install.sh;
             break ;;
        "Quit")
             break ;;
@@ -99,31 +107,11 @@ if [ "$?" -ne "0" ]; then
 fi
 }
 
-#                   #
-### DL Base Files ###
-#                   #
-
-echo "Running Base System Download Script...";
-server_dir="$HOME/$server_type";
-
-cd $HOME;
-echo -ne "${RED}Deleting steamcmd & $server_type directories if they exist...${NC}" && sleep 2;
-rm -rf ~/steamcmd; 
-rm -rf ~/$server_type;
-echo -ne "${GREEN}Downloading & Installing SteamCmd...${NC}" && sleep 2;
-wget http://media.steampowered.com/installer/steamcmd_linux.tar.gz;
-mkdir ~/steamcmd;
-tar -xvzf steamcmd_linux.tar.gz -C steamcmd;
-rm steamcmd_linux.tar.gz*;
-cd ~/steamcmd;
-# download srcds for csgo (740)
-./steamcmd.sh +login anonymous +force_install_dir $server_dir +app_update 740 validate +quit;
-
 if [[ "$opt" = "Surf" ]]; then
   echo -ne "Surf Server Install starting";
   server_dir="$HOME/Retakes/csgo"
   configs="$HOME/github/Surf/addons/sourcemod/configs/"
-  cd_dir="eval cd "$HOME/github/Surf/csgo/""
+  cd_dir="eval cd '$HOME/github/Surf/csgo/'"
 fi
 
 if [[ "$opt" = "Retakes" ]]; then
@@ -141,7 +129,7 @@ if [[ "$opt" = "Arena" ]]; then
   cd_dir="eval cd "$HOME/github/Arena/csgo/""
 fi
 
-  echo -ne "${RED}Removing Existing Addons Directory if Applicable. If You Don't Have an installed server to Surf, then this will Do nothing and is safe. Script will continue in 10 Secs...${NC}" && sleep 10
+  echo -ne "${RED}Removing Existing Addons Directory if Applicable. If You Don't Have an installed server, then this will Do nothing and is safe. Script will continue in 10 Secs...${NC}" && sleep 10
   rm -rf $server_dir/addons
 
   # make addons folder
