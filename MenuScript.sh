@@ -145,8 +145,8 @@ fi
 
   # sourcemod
   echo -ne "${GREEN}Downloading & Installing Sourcemod...${NC}" && sleep 2
-  url=$(curl -s https://sm.alliedmods.net/smdrop/1.8/sourcemod-latest-linux)
-  wget "https://sm.alliedmods.net/smdrop/1.8/$url"
+  url=$(curl -s https://sm.alliedmods.net/smdrop/1.9/sourcemod-latest-linux)
+  wget "https://sm.alliedmods.net/smdrop/1.9/$url"
   tar -xvzf "${url##*/}" -C $server_dir
 
   # Stripper Files
